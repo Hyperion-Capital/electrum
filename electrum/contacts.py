@@ -102,7 +102,7 @@ class Contacts(dict):
         except DNSException as e:
             print_error('Error resolving openalias: ', str(e))
             return None
-        prefix = 'btc'
+        prefix = 'ftc'
         for record in records:
             string = to_string(record.strings[0], 'utf8')
             if string.startswith('oa1:' + prefix):
@@ -132,4 +132,3 @@ class Contacts(dict):
                 if _type != 'address':
                     data.pop(k)
         return data
-

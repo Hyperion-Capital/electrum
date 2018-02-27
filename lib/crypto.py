@@ -30,6 +30,7 @@ import hmac
 
 import pyaes
 import scrypt
+import neoscrypt
 
 from .util import assert_bytes, InvalidPassword, to_bytes, to_string
 
@@ -136,6 +137,11 @@ def Hash(x: bytes) -> bytes:
 def PoWHash(x):
     x = to_bytes(x, 'utf8')
     return scrypt.hash(x, x, N=1 << 10, r=1, p=1, buflen=32)
+
+
+def PoWNeoScryptHash(x):
+    x = to_bytes(x, 'utf8')
+    return neoscrypt.getPoWHash(x)
 
 
 def hash_160(x: bytes) -> bytes:

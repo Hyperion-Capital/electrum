@@ -4,6 +4,8 @@
 
 from setuptools import setup
 from setuptools.command.build_py import build_py
+from setuptools.command.install import install
+from distutils import core
 import os
 import sys
 import platform
@@ -59,10 +61,16 @@ class BuildPyCommand(build_py):
             fp.writelines(verfile)
             fp.truncate()
 
+class InstallCommand(install):
+    def run(self):
+        setup = core.run_setup('neoscrypt_module/setup.py', stop_after='commandline')
+        setup.run_command('install')
+        install.run(self)
+
 setup(
     name="Electrum",
     version=version.ELECTRUM_FTC_VERSION,
-    cmdclass={'build_py': BuildPyCommand},
+    cmdclass={'build_py': BuildPyCommand, 'install': InstallCommand},
     install_requires=requirements,
     extras_require=extras_require,
     packages=[

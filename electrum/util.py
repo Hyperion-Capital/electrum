@@ -653,12 +653,12 @@ def parse_URI(uri, on_pr=None):
 
     if ':' not in uri:
         if not bitcoin.is_address(uri):
-            raise Exception("Not a bitcoin address")
+            raise Exception("Not a feathercoin address")
         return {'address': uri}
 
     u = urllib.parse.urlparse(uri)
-    if u.scheme != 'bitcoin':
-        raise Exception("Not a bitcoin URI")
+    if u.scheme != 'feathercoin':
+        raise Exception("Not a feathercoin URI")
     address = u.path
 
     # python for android fails to parse query
@@ -675,7 +675,7 @@ def parse_URI(uri, on_pr=None):
     out = {k: v[0] for k, v in pq.items()}
     if address:
         if not bitcoin.is_address(address):
-            raise Exception("Invalid bitcoin address:" + address)
+            raise Exception("Invalid feathercoin  address:" + address)
         out['address'] = address
     if 'amount' in out:
         am = out['amount']
@@ -725,7 +725,7 @@ def create_URI(addr, amount, message):
         query.append('amount=%s'%format_satoshis_plain(amount))
     if message:
         query.append('message=%s'%urllib.parse.quote(message))
-    p = urllib.parse.ParseResult(scheme='bitcoin', netloc='', path=addr, params='', query='&'.join(query), fragment='')
+    p = urllib.parse.ParseResult(scheme='feathercoin', netloc='', path=addr, params='', query='&'.join(query), fragment='')
     return urllib.parse.urlunparse(p)
 
 

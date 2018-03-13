@@ -1,12 +1,13 @@
 #!/bin/bash
 
-NAME_ROOT=electrum
+NAME_ROOT=electrum-ftc
 PYTHON_VERSION=3.5.4
 
 # These settings probably don't need any change
 export WINEPREFIX=/opt/wine64
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=22
+export WINEPATH="c:\\mingw32\\bin"
 
 PYHOME=c:/python$PYTHON_VERSION
 PYTHON="wine $PYHOME/python.exe -OO -B"
@@ -25,6 +26,7 @@ fi
 
 git clone https://github.com/spesmilo/electrum -b master
 
+#pushd $WINEPREFIX/drive_c/electrum
 pushd electrum
 if [ ! -z "$1" ]; then
     # a commit/tag/branch was specified
@@ -71,7 +73,8 @@ $PYTHON -m pip install -r ../../deterministic-build/requirements.txt
 $PYTHON -m pip install -r ../../deterministic-build/requirements-hw.txt
 
 pushd $WINEPREFIX/drive_c/electrum
-$PYTHON setup.py install
+# byte-compiling is needed to install neoscrypt properly
+PYTHONDONTWRITEBYTECODE="" ${PYTHON/ -B/} setup.py install
 popd
 
 cd ..

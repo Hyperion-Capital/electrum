@@ -643,6 +643,8 @@ class Network(util.DaemonThread):
                 self.config.mempool_fees = result
                 self.notify('fee_histogram')
         elif method == 'blockchain.estimatefee':
+            if result <= 0:
+                result = 0.01
             if error is None and result > 0:
                 i = params[0]
                 fee = int(result*COIN)

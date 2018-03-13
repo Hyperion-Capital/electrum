@@ -13,6 +13,10 @@ LIBUSB_FILENAME=libusb-1.0.22.7z
 LIBUSB_URL=https://prdownloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.22/$LIBUSB_FILENAME?download
 LIBUSB_SHA256=671f1a420757b4480e7fadc8313d6fb3cbb75ca00934c417c1efa6e77fb8779b
 
+MINGW32_FILENAME=mingw32.7z
+MINGW32_URL=https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/7.2.0/threads-posix/dwarf/i686-7.2.0-release-posix-dwarf-rt_v5-rev1.7z
+MINGW32_SHA256=8451a013ce317c72edde4c65932d6770dd98910a27714527ac27dc76bd3123f1
+
 PYTHON_VERSION=3.6.6
 
 ## These settings probably don't need change
@@ -138,6 +142,10 @@ wine "$PWD/$NSIS_FILENAME" /S
 download_if_not_exist $LIBUSB_FILENAME "$LIBUSB_URL"
 verify_hash $LIBUSB_FILENAME "$LIBUSB_SHA256"
 7z x -olibusb $LIBUSB_FILENAME -aoa
+
+download_if_not_exist $MINGW32_FILENAME "$MINGW32_URL"
+verify_hash $MINGW32_FILENAME "$MINGW32_SHA256"
+7z x -o$WINEPREFIX/drive_c $MINGW32_FILENAME | grep -v Extracting
 
 cp libusb/MS32/dll/libusb-1.0.dll $WINEPREFIX/drive_c/python$PYTHON_VERSION/
 

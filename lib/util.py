@@ -31,6 +31,7 @@ import urllib
 import threading
 import hmac
 import stat
+from pathlib import Path
 
 from .i18n import _
 
@@ -439,7 +440,8 @@ def user_dir():
     if 'ANDROID_DATA' in os.environ:
         return android_check_data_dir()
     elif os.name == 'posix':
-        return os.path.join(os.environ["HOME"], ".electrum-ftc")
+        xdg_default = os.path.join(os.environ["HOME"], ".local", "share")
+        return os.path.join(os.getenv("XDG_DATA_HOME", xdg_default), "electrum-ftc")
     elif "APPDATA" in os.environ:
         return os.path.join(os.environ["APPDATA"], "Electrum-ftc")
     elif "LOCALAPPDATA" in os.environ:
@@ -868,5 +870,5 @@ def make_dir(path, allow_symlink=True):
     if not os.path.exists(path):
         if not allow_symlink and os.path.islink(path):
             raise Exception('Dangling link: ' + path)
-        os.mkdir(path)
+        Path(path).mkdir(parents=True)
         os.chmod(path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)

@@ -3,6 +3,7 @@
 # python setup.py sdist --format=zip,gztar
 
 from setuptools import setup
+from setuptools.command.build_py import build_py
 import os
 import sys
 import platform
@@ -47,10 +48,21 @@ extras_require = {
 }
 extras_require['full'] = extras_require['hardware'] + extras_require['fast']
 
+class BuildPyCommand(build_py):
+    def run(self):
+        build_py.run(self)
+        with open('build/lib/electrum/version.py', 'r+') as fp:
+            verfile = fp.readlines()
+            verfile[0] = "ELECTRUM_FTC_VERSION = '{}'\n".format(
+                version.ELECTRUM_FTC_VERSION)
+            fp.seek(0)
+            fp.writelines(verfile)
+            fp.truncate()
 
 setup(
     name="Electrum",
-    version=version.ELECTRUM_VERSION,
+    version=version.ELECTRUM_FTC_VERSION,
+    cmdclass={'build_py': BuildPyCommand},
     install_requires=requirements,
     extras_require=extras_require,
     packages=[

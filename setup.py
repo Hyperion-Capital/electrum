@@ -76,6 +76,15 @@ class CustomInstallCommand(install):
 class BuildPyCommand(build_py):
     def run(self):
         build_py.run(self)
+        try:
+            from PyQt5 import pyrcc_main
+            if not pyrcc_main.processResourceFile(['icons.qrc'],
+                                                  'build/lib/electrum_ftc_gui/qt/icons_rc.py',
+                                                  False):
+                raise RuntimeError('Failed to generate icons_rc.py')
+        except ImportError:
+            import subprocess
+            subprocess.run(['pyrcc5', 'icons.qrc', '-o', 'build/lib/electrum_ftc_gui/qt/icons_rc.py'])
         with open('build/lib/electrum_ftc/version.py', 'r+') as fp:
             verfile = fp.readlines()
             verfile[0] = "ELECTRUM_FTC_VERSION = '{}'\n".format(

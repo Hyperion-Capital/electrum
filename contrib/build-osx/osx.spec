@@ -6,7 +6,7 @@ import sys
 import os
 
 PACKAGE='Electrum-FTC'
-PYPKG='electrum'
+PYPKG='electrum_ftc'
 MAIN_SCRIPT='electrum'
 ICONS_FILE='electrum.icns'
 
@@ -65,7 +65,7 @@ a = Analysis([electrum+MAIN_SCRIPT,
              binaries=binaries,
              datas=datas,
              hiddenimports=hiddenimports,
-             hookspath=[])
+             hookspath=['contrib/pyinstaller-hooks'])
 
 # http://stackoverflow.com/questions/19055089/pyinstaller-onefile-warning-pyconfig-h-when-importing-scipy-or-scipy-signal
 for d in a.datas:
@@ -73,7 +73,12 @@ for d in a.datas:
         a.datas.remove(d)
         break
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+import re
+pure = []
+for module in a.pure:
+    name = re.sub(r'^electrum(|_gui|_plugins)(\.|$)', r'electrum_ftc\1\2', module[0])
+    pure.append((name, *module[1:]))
+pyz = PYZ(pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(pyz,
           a.scripts,

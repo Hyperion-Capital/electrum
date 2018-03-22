@@ -53,7 +53,7 @@ extras_require['full'] = extras_require['hardware'] + extras_require['fast']
 class BuildPyCommand(build_py):
     def run(self):
         build_py.run(self)
-        with open('build/lib/electrum/version.py', 'r+') as fp:
+        with open('build/lib/electrum_ftc/version.py', 'r+') as fp:
             verfile = fp.readlines()
             verfile[0] = "ELECTRUM_FTC_VERSION = '{}'\n".format(
                 version.ELECTRUM_FTC_VERSION)
@@ -74,30 +74,30 @@ setup(
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum',
-        'electrum_gui',
-        'electrum_gui.qt',
-        'electrum_plugins',
-        'electrum_plugins.audio_modem',
-        'electrum_plugins.cosigner_pool',
-        'electrum_plugins.email_requests',
-        'electrum_plugins.hw_wallet',
-        'electrum_plugins.keepkey',
-        'electrum_plugins.labels',
-        'electrum_plugins.ledger',
-        'electrum_plugins.revealer',
-        'electrum_plugins.trezor',
-        'electrum_plugins.digitalbitbox',
-        'electrum_plugins.virtualkeyboard',
+        'electrum_ftc',
+        'electrum_ftc_gui',
+        'electrum_ftc_gui.qt',
+        'electrum_ftc_plugins',
+        'electrum_ftc_plugins.audio_modem',
+        'electrum_ftc_plugins.cosigner_pool',
+        'electrum_ftc_plugins.email_requests',
+        'electrum_ftc_plugins.hw_wallet',
+        'electrum_ftc_plugins.keepkey',
+        'electrum_ftc_plugins.labels',
+        'electrum_ftc_plugins.ledger',
+        'electrum_ftc_plugins.revealer',
+        'electrum_ftc_plugins.trezor',
+        'electrum_ftc_plugins.digitalbitbox',
+        'electrum_ftc_plugins.virtualkeyboard',
     ],
     package_dir={
-        'electrum': 'lib',
-        'electrum_gui': 'gui',
-        'electrum_plugins': 'plugins',
+        'electrum_ftc': 'lib',
+        'electrum_ftc_gui': 'gui',
+        'electrum_ftc_plugins': 'plugins',
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum': [
+        'electrum_ftc': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],

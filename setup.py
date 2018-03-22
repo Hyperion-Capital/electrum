@@ -74,7 +74,7 @@ class CustomInstallCommand(install):
 class BuildPyCommand(build_py):
     def run(self):
         build_py.run(self)
-        with open('build/lib/electrum/version.py', 'r+') as fp:
+        with open('build/lib/electrum_ftc/version.py', 'r+') as fp:
             verfile = fp.readlines()
             verfile[0] = "ELECTRUM_FTC_VERSION = '{}'\n".format(
                 version.ELECTRUM_FTC_VERSION)
@@ -88,17 +88,17 @@ setup(
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum',
-        'electrum.gui',
-        'electrum.gui.qt',
-        'electrum.plugins',
-    ] + [('electrum.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
+        'electrum_ftc',
+        'electrum_ftc.gui',
+        'electrum_ftc.gui.qt',
+        'electrum_ftc.plugins',
+    ] + [('electrum_ftc.plugins.'+pkg) for pkg in find_packages('electrum/plugins')],
     package_dir={
-        'electrum': 'electrum'
+        'electrum_ftc': 'electrum'
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum': [
+        'electrum_ftc': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],

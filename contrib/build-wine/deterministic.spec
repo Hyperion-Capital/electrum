@@ -34,11 +34,11 @@ binaries += [b for b in collect_dynamic_libs('PyQt5') if 'qwindowsvista' in b[0]
 binaries += [('C:/tmp/libsecp256k1.dll', '.')]
 
 datas = [
-    (home+'electrum/*.json', 'electrum'),
-    (home+'electrum/wordlist/english.txt', 'electrum/wordlist'),
-    (home+'electrum/locale', 'electrum/locale'),
-    (home+'electrum/plugins', 'electrum/plugins'),
-    ('C:\\Program Files (x86)\\ZBar\\bin\\', '.'),
+    (home+'lib/*.json', 'electrum_ftc'),
+    (home+'lib/wordlist/english.txt', 'electrum_ftc/wordlist'),
+    (home+'lib/locale', 'electrum_ftc/locale'),
+    (home+'plugins', 'electrum_ftc/plugins'),
+    ('C:\\Program Files (x86)\\ZBar\\bin\\', '.')
 ]
 datas += collect_data_files('trezorlib')
 datas += collect_data_files('safetlib')
@@ -71,7 +71,7 @@ a = Analysis([home+'run_electrum',
              datas=datas,
              #pathex=[home+'lib', home+'gui', home+'plugins'],
              hiddenimports=hiddenimports,
-             hookspath=[])
+             hookspath=[home+'contrib\\pyinstaller-hooks'])
 
 
 # http://stackoverflow.com/questions/19055089/pyinstaller-onefile-warning-pyconfig-h-when-importing-scipy-or-scipy-signal
@@ -83,7 +83,12 @@ for d in a.datas:
 # hotfix for #3171 (pre-Win10 binaries)
 a.binaries = [x for x in a.binaries if not x[1].lower().startswith(r'c:\windows')]
 
-pyz = PYZ(a.pure)
+import re
+pure = []
+for module in a.pure:
+    name = re.sub(r'^electrum', r'electrum_ftc', module[0])
+    pure.append((name, *module[1:]))
+pyz = PYZ(pure)
 
 
 #####

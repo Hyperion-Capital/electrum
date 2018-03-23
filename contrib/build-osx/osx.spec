@@ -7,7 +7,7 @@ import os
 
 PACKAGE='Electrum-FTC'
 PYPKG='electrum_ftc'
-MAIN_SCRIPT='electrum'
+MAIN_SCRIPT='electrum-ftc'
 ICONS_FILE='electrum.icns'
 
 for i, x in enumerate(sys.argv):

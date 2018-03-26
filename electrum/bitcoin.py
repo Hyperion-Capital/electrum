@@ -644,10 +644,17 @@ def deserialize_xkey(xkey, prv, *, net=None):
     c = xkey[13:13+32]
     header = int('0x' + bh2u(xkey[0:4]), 16)
     headers = net.XPRV_HEADERS if prv else net.XPUB_HEADERS
-    if header not in headers.values():
+
+    # Some hardware wallets only return Bitcoin XPUBs. We need to convert them
+    XPRV_HEADER_BTC_STANDARD = 0x0488ade4
+    XPUB_HEADER_BTC_STANDARD = 0x0488b21e
+    if header in headers.values():
+        xtype = list(headers.keys())[list(headers.values()).index(header)]
+    elif header == XPRV_HEADER_BTC_STANDARD or header == XPUB_HEADER_BTC_STANDARD:
+        xtype = 'standard'
+    else:
         raise InvalidMasterKeyVersionBytes('Invalid extended key format: {}'
                                            .format(hex(header)))
-    xtype = list(headers.keys())[list(headers.values()).index(header)]
     n = 33 if prv else 32
     K_or_k = xkey[13+n:]
     if prv and not ecc.is_secret_within_curve_range(K_or_k):

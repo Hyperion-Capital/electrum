@@ -63,7 +63,7 @@ class BitcoinMainnet:
         'p2wpkh':      0x04b24746,  # zpub
         'p2wsh':       0x02aa7ed3,  # Zpub
     }
-    BIP44_COIN_TYPE = 0
+    BIP44_COIN_TYPE = 8
 
 
 class BitcoinTestnet:

@@ -21,6 +21,7 @@ hiddenimports += collect_submodules('trezorlib')
 hiddenimports += collect_submodules('btchip')
 hiddenimports += collect_submodules('keepkeylib')
 hiddenimports += collect_submodules('websocket')
+hiddenimports += ['_scrypt']
 
 # Add libusb binary
 binaries = [(PYHOME+"/libusb-1.0.dll", ".")]

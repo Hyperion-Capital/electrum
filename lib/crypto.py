@@ -29,6 +29,7 @@ import hashlib
 import hmac
 
 import pyaes
+import scrypt
 
 from .util import assert_bytes, InvalidPassword, to_bytes, to_string
 
@@ -130,6 +131,11 @@ def Hash(x: bytes) -> bytes:
     x = to_bytes(x, 'utf8')
     out = bytes(sha256(sha256(x)))
     return out
+
+
+def PoWHash(x):
+    x = to_bytes(x, 'utf8')
+    return scrypt.hash(x, x, N=1 << 10, r=1, p=1, buflen=32)
 
 
 def hash_160(x: bytes) -> bytes:

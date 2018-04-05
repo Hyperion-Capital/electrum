@@ -25,10 +25,13 @@ import threading
 
 from . import util
 from .bitcoin import Hash, hash_encode, int_to_hex, rev_hex
+from .crypto import PoWHash
 from . import constants
 from .util import bfh, bh2u
 
-MAX_TARGET = 0x00000000FFFF0000000000000000000000000000000000000000000000000000
+MAX_TARGET = 0x00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+SEVEN_DAYS = 7 * 24 * 60 * 60
+
 
 
 class MissingHeader(Exception):
@@ -59,6 +62,13 @@ def deserialize_header(s, height):
     h['nonce'] = hex_to_int(s[76:80])
     h['block_height'] = height
     return h
+
+def pow_hash_header(header):
+    if header is None:
+        return '0' * 64
+    if header.get('prev_block_hash') is None:
+        header['prev_block_hash'] = '00'*32
+    return hash_encode(PoWHash(bfh(serialize_header(header))))
 
 def hash_header(header):
     if header is None:
@@ -158,7 +168,7 @@ class Blockchain(util.PrintError):
         self._size = os.path.getsize(p)//80 if os.path.exists(p) else 0
 
     def verify_header(self, header, prev_hash, target):
-        _hash = hash_header(header)
+        _hash = pow_hash_header(header)
         if prev_hash != header.get('prev_block_hash'):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
@@ -306,22 +316,26 @@ class Blockchain(util.PrintError):
         if height == len(self.checkpoints) * 2016:
             # this value needs to be updated every time
             # `checkpoints.json` is updated
-            return 16946223147907286639275870228581142863500004051737247938
+            return 143256919707644724074290378570122304852251874692742198474282369024
+        else:
+            return self.__vanilla_target(height, headers)
 
+    def __vanilla_target(self, height, headers):
         interval = 2016
-        last = self.get_header(height - 1, height, headers)
+        last_height = height - 1
+        last = self.get_header(last_height, height, headers)
         if not last:
             raise MissingHeader()
         bits = last.get('bits')
         target = self.bits_to_target(bits)
         if height % interval != 0:
             return target
-        first = self.get_header(height - interval, height, headers)
+        first = self.get_header(max(0, last_height - interval), height, headers)
         if not first:
             raise MissingHeader()
         # new target
         nActualTimespan = last.get('timestamp') - first.get('timestamp')
-        nTargetTimespan = 14 * 24 * 60 * 60
+        nTargetTimespan = SEVEN_DAYS // 2
         nActualTimespan = max(nActualTimespan, nTargetTimespan // 4)
         nActualTimespan = min(nActualTimespan, nTargetTimespan * 4)
         new_target = min(MAX_TARGET, (target * nActualTimespan) // nTargetTimespan)
@@ -335,8 +349,8 @@ class Blockchain(util.PrintError):
 
     def bits_to_target(self, bits):
         bitsN = (bits >> 24) & 0xff
-        if not (bitsN >= 0x03 and bitsN <= 0x1d):
-            raise Exception("First part of bits should be in [0x03, 0x1d]")
+        if not (bitsN >= 0x03 and bitsN <= 0x1e):
+            raise Exception("First part of bits should be in [0x03, 0x1e]")
         bitsBase = bits & 0xffffff
         if not (bitsBase >= 0x8000 and bitsBase <= 0x7fffff):
             raise Exception("Second part of bits should be in [0x8000, 0x7fffff]")

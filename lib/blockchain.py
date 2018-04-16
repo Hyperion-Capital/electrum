@@ -163,11 +163,12 @@ class Blockchain(util.PrintError):
             raise Exception("prev hash mismatch: %s vs %s" % (prev_hash, header.get('prev_block_hash')))
         if constants.net.TESTNET:
             return
-        bits = self.target_to_bits(target)
-        if bits != header.get('bits'):
-            raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
-        if int('0x' + _hash, 16) > target:
-            raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
+        if header.get('block_height') >= len(self.checkpoints) * 2016:
+            bits = self.target_to_bits(target)
+            if bits != header.get('bits'):
+                raise Exception("bits mismatch: %s vs %s" % (bits, header.get('bits')))
+            if int('0x' + _hash, 16) > target:
+                raise Exception("insufficient proof of work: %s vs target %s" % (int('0x' + _hash, 16), target))
 
     def verify_chunk(self, index, data):
         num = len(data) // 80
@@ -288,8 +289,7 @@ class Blockchain(util.PrintError):
         elif height < len(self.checkpoints) * 2016:
             assert (height+1) % 2016 == 0, height
             index = height // 2016
-            h, t = self.checkpoints[index]
-            return h
+            return self.checkpoints[index]
         else:
             return hash_header(self.read_header(height))
 
@@ -299,9 +299,13 @@ class Blockchain(util.PrintError):
             return 0
         if index == -1:
             return MAX_TARGET
-        if index < len(self.checkpoints):
-            h, t = self.checkpoints[index]
-            return t
+        if index < len(self.checkpoints) - 1:
+            # return pessimistic value to detect if check is unintentionally performed
+            return 0
+        if index == len(self.checkpoints) - 1:
+            # this value needs to be updated every time
+            # `checkpoints.json` is updated
+            return 16946223147907286639275870228581142863500004051737247938
         # new target
         first = self.read_header(index * 2016)
         last = self.read_header(index * 2016 + 2015)
@@ -373,10 +377,5 @@ class Blockchain(util.PrintError):
 
     def get_checkpoints(self):
         # for each chunk, store the hash of the last block and the target after the chunk
-        cp = []
         n = self.height() // 2016
-        for index in range(n):
-            h = self.get_hash((index+1) * 2016 -1)
-            target = self.get_target(index)
-            cp.append((h, target))
-        return cp
+        return [self.get_hash((i+1) * 2016 -1) for i in range(n)]

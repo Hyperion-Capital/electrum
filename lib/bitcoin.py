@@ -417,7 +417,7 @@ PURPOSE48_SCRIPT_TYPES_INV = inv_dict(PURPOSE48_SCRIPT_TYPES)
 
 
 def serialize_privkey(secret: bytes, compressed: bool, txin_type: str,
-                      internal_use: bool=False) -> str:
+                      internal_use: bool=True) -> str:
     # we only export secrets inside curve range
     secret = ecc.ECPrivkey.normalize_secret_bytes(secret)
     if internal_use:

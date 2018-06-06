@@ -426,8 +426,6 @@ mainnet_block_explorers = {
                         {'tx': 'tx', 'addr': 'address'}),
     'explorer.feathercoin.com': ('http://explorer.feathercoin.com/',
                         {'tx': 'tx', 'addr': 'address'}),
-    #fix for Bug22
-    # Add a new url "chainz.cryptoid.info"
     'chainz.cryptoid.info': ('https://chainz.cryptoid.info/ftc',
                         {'tx': 'tx.dws', 'addr': 'address.dws'}),
 }
@@ -452,8 +450,6 @@ def block_explorer_URL(config, kind, item):
     kind_str = be_tuple[1].get(kind)
     if not kind_str:
         return
-    # Fix for Bug22
-    # Chainz url required "?" instead of "/" as join
     if be_tuple[0]=="https://chainz.cryptoid.info/ftc":
         url_parts = [be_tuple[0] + "/" + kind_str, item]
         return "?".join(url_parts)

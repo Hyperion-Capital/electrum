@@ -503,6 +503,8 @@ mainnet_block_explorers = {
                         {'tx': 'tx', 'addr': 'address'}),
     'explorer.feathercoin.com': ('http://explorer.feathercoin.com/',
                         {'tx': 'tx', 'addr': 'address'}),
+    'chainz.cryptoid.info': ('https://chainz.cryptoid.info/ftc/,
+                        {'tx': 'tx', 'addr': 'address'}),
 }
 
 testnet_block_explorers = {

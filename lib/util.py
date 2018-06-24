@@ -504,7 +504,7 @@ mainnet_block_explorers = {
     'explorer.feathercoin.com': ('http://explorer.feathercoin.com/',
                         {'tx': 'tx', 'addr': 'address'}),
     'chainz.cryptoid.info': ('https://chainz.cryptoid.info/ftc/',
-                        {'tx': 'tx', 'addr': 'address'}),
+                        {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
 }
 
 testnet_block_explorers = {

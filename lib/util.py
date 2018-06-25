@@ -562,12 +562,10 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'fsight.chain.tips': ('https://fsight.chain.tips',
-                        {'tx': 'tx', 'addr': 'address'}),
     'explorer.feathercoin.com': ('http://explorer.feathercoin.com/',
-                        {'tx': 'tx', 'addr': 'address'}),
+                                 {'tx': 'tx/', 'addr': 'address/'}),
     'chainz.cryptoid.info': ('https://chainz.cryptoid.info/ftc/',
-                        {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
+                             {'tx': 'tx.dws?', 'addr': 'address.dws?'}),
 }
 
 testnet_block_explorers = {
@@ -578,7 +576,7 @@ def block_explorer_info():
     return testnet_block_explorers if constants.net.TESTNET else mainnet_block_explorers
 
 def block_explorer(config):
-    return config.get('block_explorer', 'fsight.chain.tips')
+    return config.get('block_explorer', 'explorer.feathercoin.com')
 
 def block_explorer_tuple(config):
     return block_explorer_info().get(block_explorer(config))

@@ -151,8 +151,8 @@ verify_hash $MINGW32_FILENAME "$MINGW32_SHA256"
 cp libusb/MS32/dll/libusb-1.0.dll $WINEPREFIX/drive_c/python$PYTHON_VERSION/
 
 # add .bat file that exposes host's git describe in wine
-printf '%s\r\n%s\r\n' '@echo off' 'cmd /c /bin/sh -c "git describe --dirty"' \
-    > $WINEPREFIX/drive_c/windows/git.bat
+printf '%s\n' '@echo off' '/bin/sh -c "git describe --dirty" > out.txt' \
+    'ping -n2' 'type out.txt' > $WINEPREFIX/drive_c/windows/git.bat
 # make files without extension (i.e. unix binaries) executable in wine
 sed_cmd='s/^\("PATHEXT"=".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH\)"$/\1;."/'
 sed -i "$sed_cmd" $WINEPREFIX/system.reg

@@ -20,14 +20,7 @@ set -e
 mkdir -p tmp
 cd tmp
 
-if [ -d ./electrum ]; then
-  rm ./electrum -rf
-fi
-
-git clone https://github.com/spesmilo/electrum -b master
-
-#pushd $WINEPREFIX/drive_c/electrum
-pushd electrum
+pushd $WINEPREFIX/drive_c/electrum
 if [ ! -z "$1" ]; then
     # a commit/tag/branch was specified
     if ! git cat-file -e "$1" 2> /dev/null
@@ -61,10 +54,7 @@ popd
 find -exec touch -d '2000-11-11T11:11:11+00:00' {} +
 popd
 
-rm -rf $WINEPREFIX/drive_c/electrum
-cp -r electrum $WINEPREFIX/drive_c/electrum
-cp electrum/LICENCE .
-cp -r ./electrum/contrib/deterministic-build/electrum-locale/locale $WINEPREFIX/drive_c/electrum/lib/
+cp -r $WINEPREFIX/drive_c/electrum/contrib/deterministic-build/electrum-locale/locale $WINEPREFIX/drive_c/electrum/lib/
 
 # Install frozen dependencies
 $PYTHON -m pip install -r ../../deterministic-build/requirements.txt

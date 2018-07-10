@@ -12,14 +12,13 @@ SEED_PREFIX_SW   = '100'     # Segwit wallet
 if ELECTRUM_FTC_VERSION == 'unknown-version':
     import subprocess
     import platform
-    try:
-        cmd = ["git", "describe", "--always", "--dirty"]
-        if platform.system() == 'Windows':
-            cmd = ["cmd", "/c"] + cmd
-        result = subprocess.run(cmd, stdout=subprocess.PIPE)
-        ELECTRUM_FTC_VERSION = result.stdout.decode('utf-8').strip()
-    except Exception:
-        pass
+    cmd = ["git", "describe", "--always", "--dirty"]
+    if platform.system() == 'Windows':
+        cmd = ["cmd", "/c"] + cmd
+    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    ELECTRUM_FTC_VERSION = result.stdout.decode('utf-8').strip()
+    if ELECTRUM_FTC_VERSION == "":
+        raise Exception("cannot extract version string from git")
 
 def seed_prefix(seed_type):
     if seed_type == 'standard':

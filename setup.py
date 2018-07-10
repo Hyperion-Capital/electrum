@@ -5,6 +5,7 @@
 from setuptools import setup
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
+from setuptools.command.sdist import sdist
 from distutils import core
 import os
 import sys
@@ -50,6 +51,17 @@ extras_require = {
 }
 extras_require['full'] = extras_require['hardware'] + extras_require['fast']
 
+class SdistCommand(sdist):
+    def run(self):
+        with open('lib/version.py', 'r+') as fp:
+            verfile = fp.readlines()
+            verfile[0] = "ELECTRUM_FTC_VERSION = '{}'\n".format(
+                version.ELECTRUM_FTC_VERSION)
+            fp.seek(0)
+            fp.writelines(verfile)
+            fp.truncate()
+        sdist.run(self)
+
 class BuildPyCommand(build_py):
     def run(self):
         build_py.run(self)
@@ -81,7 +93,8 @@ class InstallCommand(install):
 setup(
     name="Electrum-FTC",
     version=version.ELECTRUM_FTC_VERSION,
-    cmdclass={'build_py': BuildPyCommand, 'install': InstallCommand},
+    cmdclass={'build_py': BuildPyCommand, 'install': InstallCommand,
+              'sdist': SdistCommand},
     install_requires=requirements,
     extras_require=extras_require,
     packages=[

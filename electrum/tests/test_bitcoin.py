@@ -172,8 +172,8 @@ class Test_bitcoin(SequentialTestCase):
         sig1_b64 = base64.b64encode(sig1)
         sig2_b64 = base64.b64encode(sig2)
 
-        self.assertEqual(sig1_b64, b'IMJ177QE+PonT9RcqHL5/aFjo635kMmE6sDi9PAtvqm1PaqCVU16L0Mb3d64z7nNnrDpVWa+2UqaQ1r2oqEkgsE=')
-        self.assertEqual(sig2_b64, b'HOrxiXh8D4ddJSG2x3oV7OVYSOC45DuLst/uS+G3tc70OZyuqet67q1r+7fKDXEBkhTSXbt+gl+iC7/okXLXYec=')
+        self.assertEqual(sig1_b64, b'H0YLLJku6jqtfMAiDHHlY9Dr7blntXd0T7CPGLfKm0XtWjleM+DJ5HCgRs55EdQsj6KL0v0TjsuVI7Ij3//X84E=')
+        self.assertEqual(sig2_b64, b'GweSYB1TXaNWFIo4eOGDLUvtvMcAB5rwXDGQIm3al/22PsERMOLz+pl1fjuV4zCBI7ERqPHfmXZxF3G+3UZyBuQ=')
 
         self.assertTrue(ecc.verify_message_with_address(addr1, sig1, msg1))
         self.assertTrue(ecc.verify_message_with_address(addr2, sig2, msg2))

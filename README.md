@@ -42,7 +42,7 @@ Download the latest version from our [release page](https://github.com/Featherco
 First the dependencies need to be installed. For Ubuntu/Debian.
 
 ```sh
-    sudo apt-get install git libssl-dev python3-pip python3-pyqt5 pyqt5-dev-tools libudev-dev libusb-1.0.0-dev
+    sudo apt-get install git libssl-dev python3-pip python3-dev python3-pyqt5 pyqt5-dev-tools libudev-dev libusb-1.0.0-dev
 ```
 
 Then, install the current release of electrum-ftc.
